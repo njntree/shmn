@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AI Swamp Spaceship Shaman</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap');
+
+        body {
+            font-family: 'Cutive Mono', monospace;
+            background-color: #0B3B0B;
+            color: #E5E5E5;
+            padding: 10px;
+            background-image: url("https://www.nasa.gov/sites/default/files/thumbnails/image/potw1936a.jpg");
+            background-size: cover;
+        }
+
+        #chatBox {
+            background-color: rgba(0,0,0,0.7);
+            min-height: 400px;
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            overflow-y: auto;
+        }
+
+        #userInput {
+            width: 80%;
+            height: 30px;
+            padding: 2px;
+            border-radius: 5px;
+            border: none;
+            color: #0B3B0B;
+            background-color: #E5E5E5;
+        }
+
+        #sendButton {
+            padding: 2px 10px;
+            border-radius: 5px;
+            border: none;
+            color: #0B3B0B;
+            background-color: #E5E5E5;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .user {
+            color: #71C671;
+        }
+
+        .ai {
+            color: #E5E5E5;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to the AI Swamp Spaceship Shaman</h1>
+    <div id="chatBox"></div>
+    <input type="text" id="userInput" placeholder="Type a message..." />
+    <button id="sendButton" onclick="sendMessage()">Send</button>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+
+            // Display user's message
+            chatBox.innerHTML += `<div class="message user">You: ${userInput.value}</div>`;
+
+            // Fetch AI response
+            const response = await fetch('http://localhost:8000/text_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: userInput.value
+                })
+            });
+            const data = await response.json();
+
+            // Display AI's response
+            chatBox.innerHTML += `<div class="message ai">AI: ${data.response}</div>`;
+
+            userInput.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight; // scroll to bottom
+        }
+    </script>
+</body>
+
+</html>
